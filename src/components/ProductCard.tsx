@@ -10,13 +10,13 @@ export default function ProductCard({ product }: Props) {
   const addItem = useCartStore((s) => s.addItem);
 
   return (
-    <Card>
-      <CardContent>
+    <Card >
+      <CardContent sx={{ display: "flex", flexDirection: "column", justifyContent: "center", height: 250, width: 250 }}>
         <Typography variant="h6">{product.name}</Typography>
         <Typography color="text.secondary">₹{product.price}</Typography>
         <Button
           variant="contained"
-          sx={{ mt: 8 }}
+          sx={{ mt: 10}}
           onClick={() => addItem(product)}
         >
           Add to Cart

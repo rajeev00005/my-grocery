@@ -7,9 +7,7 @@ import {
   Typography,
   IconButton,
   Badge,
-  Box,
   Container,
-  Button,
 } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import CartDrawer from "./CartDrawer";
