@@ -1,95 +1,71 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
 
-export default function Home() {
+import React, { useState } from "react";
+import { Box, TextField, MenuItem, Select, InputLabel, FormControl } from "@mui/material";
+import ProductGrid from "../components/ProductGrid";
+
+type Product = { id: number; name: string; price: number; category: string };
+
+const PRODUCTS: Product[] = [
+  { id: 1, name: "Apple", price: 50, category: "Fruit" },
+  { id: 2, name: "Banana", price: 20, category: "Fruit" },
+  { id: 3, name: "Milk", price: 40, category: "Dairy" },
+  { id: 4, name: "Cheese", price: 80, category: "Dairy" },
+  { id: 5, name: "Bread", price: 30, category: "Bakery" },
+  { id: 6, name: "Butter", price: 60, category: "Dairy" },
+  { id: 7, name: "Orange", price: 35, category: "Fruit" },
+  { id: 8, name: "Cake", price: 120, category: "Bakery" },
+];
+
+export default function HomePage() {
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("All");
+  const [sort, setSort] = useState<"asc" | "desc">("asc");
+
+  const filtered = PRODUCTS.filter(
+    (p) =>
+      p.name.toLowerCase().includes(search.toLowerCase()) &&
+      (category === "All" ? true : p.category === category)
+  ).sort((a, b) => (sort === "asc" ? a.price - b.price : b.price - a.price));
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
+    <Box p={3}>
+      <Box display="flex" gap={2} mb={3} flexWrap="wrap">
+        <TextField
+          label="Search"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          fullWidth
+          sx={{ minWidth: 200 }}
         />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+        <FormControl sx={{ minWidth: 150 }}>
+          <InputLabel>Category</InputLabel>
+          <Select
+            value={category}
+            label="Category"
+            onChange={(e) => setCategory(e.target.value)}
           >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
+            <MenuItem value="All">All</MenuItem>
+            <MenuItem value="Fruit">Fruit</MenuItem>
+            <MenuItem value="Dairy">Dairy</MenuItem>
+            <MenuItem value="Bakery">Bakery</MenuItem>
+          </Select>
+        </FormControl>
+
+        <FormControl sx={{ minWidth: 150 }}>
+          <InputLabel>Sort by Price</InputLabel>
+          <Select
+            value={sort}
+            label="Sort by Price"
+            onChange={(e) => setSort(e.target.value as "asc" | "desc")}
           >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+            <MenuItem value="asc">Low → High</MenuItem>
+            <MenuItem value="desc">High → Low</MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
+      <ProductGrid products={filtered} />
+    </Box>
   );
 }
